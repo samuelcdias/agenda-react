@@ -49,7 +49,7 @@ export default class ContactsService extends DBService {
       email: contact.email,
       category_id: contact.category,
     }
-    await this.update(contact)
+    await this.update(contactValue)
   }
 
   async getContactByCategory(category) {
