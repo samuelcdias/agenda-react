@@ -40,6 +40,18 @@ export default class ContactsService extends DBService {
     await this.save(contactValue)
   }
 
+  async updateContact(contact) {
+    const contactValue = {
+      id: contact.id,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      phone_number: contact.phone_number,
+      email: contact.email,
+      category_id: contact.category,
+    }
+    await this.update(contact)
+  }
+
   async getContactByCategory(category) {
     return await this.getBy(CONTACT.CATEGORY, category)
   }
