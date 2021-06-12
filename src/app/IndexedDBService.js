@@ -23,7 +23,7 @@ export class IndexedDBService {
   }
 
   async delete(itemName, id) {
-    await this.db.friends.where(itemName).equals(id).delete()
+    await this.db.states.where(itemName).equals(id).delete()
   }
 }
 
