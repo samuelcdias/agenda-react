@@ -21,10 +21,11 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav">
-            <NavBarItem href="#/contats" label="Contatos" />
+            <NavBarItem href="#/contacts" label="Contatos" />
+            <NavBarItem href="#/contacts/register" label="Registrar" />
             <NavBarItem href="#/about" label="Sobre" />
           </ul>
-          <form className="d-flex" float="left">
+          <form className="d-flex" float="right">
             <input
               className="form-control me-sm-2"
               type="text"
