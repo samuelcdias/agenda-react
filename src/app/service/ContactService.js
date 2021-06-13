@@ -24,7 +24,7 @@ const CONTACT_MODEL = {
 
 const DB_NAME = 'contacts'
 
-export default class ContactsService extends DBService {
+export default class ContactService extends DBService {
   constructor() {
     super(DB_NAME, CONTACT_MODEL)
   }
@@ -37,7 +37,7 @@ export default class ContactsService extends DBService {
       email: contact.email,
       category_id: contact.category,
     }
-    await this.save(contactValue)
+    return await this.save(contactValue)
   }
 
   async updateContact(contact) {

@@ -2,7 +2,7 @@ import { Component } from 'react'
 
 export default class Modal extends Component {
   state = {
-    isVisible: true,
+    isVisible: this.props.visibility,
   }
 
   displayIt(isVisible) {

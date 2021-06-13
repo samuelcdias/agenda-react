@@ -1,145 +1,136 @@
-import { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useHistory, withRouter } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { mask, unMask } from 'remask'
+
 import FormGroup from '../Components/FormGroup'
 import Modal from '../Components/Modal'
+import { messageSuccess, messageError } from '../Components/Toast'
+import Input from '../Components/Input'
 
 import ContactService from '../app/service/ContactService'
 import CategoryService from '../app/service/CategoryService'
+import schema from '../app/service/ValidateContactForm'
 
-import { messageSuccess, messageError } from '../Components/Toast'
+function RegisterContact() {
+  const [isVisible, setIsVisible] = useState(true)
 
-class RegisterContact extends Component {
-  constructor() {
-    super()
-    this.service_contact = new ContactService()
-    this.service_category = new CategoryService()
-  }
+  const history = useHistory()
+  const service_contact = new ContactService()
+  const service_category = new CategoryService()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
 
-  state = {
-    visible: true,
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    email: '',
-    category: '',
-  }
+  useEffect(() => {
+    document.addEventListener('keypress', handleOnChange)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  validate() {
-    const msgs = []
-    if (!this.state.first_name) {
-      msgs.push('O campo Nome é obrigatório.')
-    }
-    if (!this.state.last_name) {
-      msgs.push('O campo Nome é obrigatório.')
-    }
-
-    const phoneRegExp =
-      /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/
-    if (!this.state.phone_number) {
-      msgs.push('O campo telefone é obrigatório.')
-    } else if (!this.state.phone_number.match(phoneRegExp)) {
-      msgs.push('Informe o número de telefone com ddd.')
-    }
-
-    return msgs
-  }
-
-  register = () => {
-    const msgs = this.validate()
-
-    if (msgs && msgs.length > 0) {
-      msgs.forEach((msg) => {
-        messageError(msg)
-      })
-      return false
-    }
-
+  const saveNewContact = async (data) => {
+    console.log(data)
     const contact = {
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      phone_number: this.state.phone_number,
-      email: this.state.email,
-      category: this.state.category,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      phone_number: data.phone_number,
+      email: data.email,
+      category: data.category,
     }
 
-    this.service_contact
+    await service_contact
       .saveContact(contact)
       .then((response) => {
         messageSuccess('Contato cadastrado com sucesso!')
-        this.props.history.push('/contacts')
+        history.push('/contacts')
+        setIsVisible(false)
       })
       .catch((error) => {
-        messageError({ title: 'Erro', description: error.response.data })
+        messageError(error.response.data)
       })
   }
 
-  render() {
-    return (
-      this.state.visible && (
-        <Modal title="Inserir novo contato" action={this.register}>
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="bs-component">
+  function handleOnChange() {
+    const originalValue = unMask(getValues('phone_number'))
+    const maskedValue = mask(originalValue, [
+      '(99) 9999-9999',
+      '(99) 9 9999-9999',
+      '+99 (99) 9999-9999',
+    ])
+    setValue('phone_number', maskedValue)
+  }
+
+  return (
+    isVisible && (
+      <Modal
+        title="Inserir novo contato"
+        visibility={isVisible}
+        action={handleSubmit(saveNewContact)}
+      >
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
+              <form>
                 <FormGroup label="Nome: *" htmlFor="input_first_name">
-                  <input
-                    type="text"
+                  <Input
                     className="form-control"
                     data-test="input_first_name"
                     id="input_first_name"
-                    name="nome"
-                    onChange={(e) =>
-                      this.setState({ first_name: e.target.value })
-                    }
                     placeholder="Digite o Nome"
+                    type="text"
+                    register={register('first_name')}
+                    error={errors?.first_name}
                   />
                 </FormGroup>
 
                 <FormGroup label="Sobrenome: *" htmlFor="input_last_name">
-                  <input
-                    type="text"
+                  <Input
                     className="form-control"
                     data-test="input_last_name"
                     id="input_last_name"
-                    name="nome"
-                    onChange={(e) =>
-                      this.setState({ last_name: e.target.value })
-                    }
                     placeholder="Digite o Sobrenome"
+                    type="text"
+                    register={register('last_name')}
+                    error={errors?.last_name}
                   />
                 </FormGroup>
 
                 <FormGroup label="Telefone: *" htmlFor="input_phone_number">
-                  <input
+                  <Input
                     type="text"
                     className="form-control"
                     data-test="input_phone_number"
                     id="input_phone_number"
-                    name="nome"
-                    onChange={(e) =>
-                      this.setState({ phone_number: e.target.value })
-                    }
-                    placeholder="Digite o Telefone"
+                    onChange={handleOnChange}
+                    register={register('phone_number')}
+                    error={errors?.phone_number}
                   />
                 </FormGroup>
 
-                <FormGroup label="Email: *" htmlFor="input_email">
-                  <input
+                <FormGroup label="Email:" htmlFor="input_email">
+                  <Input
                     type="email"
                     className="form-control"
                     data-test="input_email"
                     id="input_email"
-                    name="email"
-                    onChange={(e) => this.setState({ email: e.target.value })}
                     placeholder="Digite o Email"
+                    register={register('email')}
+                    error={errors?.email}
                   />
                 </FormGroup>
-              </div>
+              </form>
             </div>
           </div>
-        </Modal>
-      )
+        </div>
+      </Modal>
     )
-  }
+  )
 }
 
 export default withRouter(RegisterContact)

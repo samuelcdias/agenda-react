@@ -3,7 +3,7 @@ import Navbar from '../Components/navbar'
 import Routes from '../main/routes'
 
 import 'bootswatch/dist/flatly/bootstrap.css'
-import '../App.css'
+import '../styles/App.css'
 import 'toastr/build/toastr.min.js'
 import 'toastr/build/toastr.css'
 
