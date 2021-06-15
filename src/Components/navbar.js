@@ -25,16 +25,6 @@ function Navbar() {
             <NavBarItem href="#/contacts/register" label="Registrar" />
             <NavBarItem href="#/about" label="Sobre" />
           </ul>
-          <form className="d-flex" float="right">
-            <input
-              className="form-control me-sm-2"
-              type="text"
-              placeholder="Pesquisar Contato"
-            />
-            <button className="btn btn-secondary my-2 my-sm-0" type="submit">
-              Pesquisar
-            </button>
-          </form>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Table from '../Components/table'
 import Register from './RegisterContacts'
 import Card from '../Components/Card'
 import ContactService from '../app/service/ContactService'
+import { IDContext } from '../Components/Provider'
 
 function Contacts() {
   const [state, setState] = useState({
@@ -12,18 +13,24 @@ function Contacts() {
     email: '',
     contacts: [],
   })
+  const { updateTable, setUpdateTable } = useContext(IDContext)
 
   const service = new ContactService()
   useEffect(() => {
     getList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  useEffect(() => {
+    if (updateTable === true) {
+      getList()
+      setUpdateTable(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateTable])
 
   async function getList() {
     const list = await service.getAllContacts()
     setState({ contacts: list })
-    console.log(list)
-    console.log(state)
   }
   return (
     <div className="container">
@@ -31,7 +38,7 @@ function Contacts() {
         <div className="row">
           <div className="col-md-12">
             <div className="bs-component">
-              <Table contacts={state.contacts || []} />
+              <Table contacts={state.contacts || []} service={service} />
             </div>
           </div>
         </div>
