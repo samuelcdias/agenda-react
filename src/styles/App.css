@@ -1,8 +1,20 @@
+:root {
+  --primary: #75cfb8;
+  --secondary: #bbdfc8;
+  --background: #ffeedb;
+  --text: #0a1d37;
+  --black: #161616;
+  --white: #f7f7f9;
+  --valid: #4cd62b;
+  --invalid: #e83f5b;
+}
+
 body {
   padding-top: 120px;
+  background: #e0c7df;
 }
 pre {
-  background: #f7f7f9;
+  background: #ffeedb;
 }
 @media (min-width: 768px) {
   body > .navbar-transparent {
@@ -11,6 +23,10 @@ pre {
   body > .navbar-transparent .navbar-nav > .open > a {
     box-shadow: none;
   }
+}
+.sobre {
+  color: #0a1d37;
+  text-align: center;
 }
 #home,
 #help {
