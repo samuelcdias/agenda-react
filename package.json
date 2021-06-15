@@ -16,7 +16,7 @@
     "react-hook-form": "^7.8.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
-    "remask": "*",
+    "remask": "0.1.0-alpha.4",
     "toastr": "^2.1.4",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.9"

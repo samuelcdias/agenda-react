@@ -63,4 +63,8 @@ export default class ContactService extends DBService {
   async getById(id) {
     return await this.getBy(CONTACT.ID, id)
   }
+
+  async deleteContact(id) {
+    await this.delete('id', id)
+  }
 }
