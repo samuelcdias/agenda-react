@@ -37,6 +37,17 @@ export default class ContactService extends DBService {
       email: contact.email,
       category_id: contact.category,
     }
+    const contactSaved = await this.getBy(
+      'phone_number',
+      contactValue.phone_number
+    )
+    if (contactSaved) {
+      throw new Error(
+        `O número ${contactSaved.phone_number} está cadastrado para ${
+          contactSaved.first_name + ' ' + contactSaved.last_name
+        }`
+      )
+    }
     return await this.save(contactValue)
   }
 

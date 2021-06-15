@@ -23,7 +23,8 @@ export function showMessage(title, message, type) {
 }
 
 export function messageError(message) {
-  showMessage('Erro', message, 'error')
+  let msg = String(message).split(':')
+  showMessage('Erro', msg[1], 'error')
 }
 
 export function messageSuccess(message) {

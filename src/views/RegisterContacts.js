@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -12,9 +12,11 @@ import Input from '../Components/Input'
 import ContactService from '../app/service/ContactService'
 import CategoryService from '../app/service/CategoryService'
 import schema from '../app/service/ValidateContactForm'
+import { IDContext } from '../Components/Provider'
 
 function RegisterContact() {
   const [isVisible, setIsVisible] = useState(true)
+  const { idContact, setIdContact } = useContext(IDContext)
 
   const history = useHistory()
   const service_contact = new ContactService()
@@ -31,11 +33,13 @@ function RegisterContact() {
 
   useEffect(() => {
     document.addEventListener('keypress', handleOnChange)
+    if (idContact !== '') {
+      updateContactFunction()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const saveNewContact = async (data) => {
-    console.log(data)
+  async function saveNewContact(data) {
     const contact = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -44,16 +48,41 @@ function RegisterContact() {
       category: data.category,
     }
 
-    await service_contact
-      .saveContact(contact)
-      .then((response) => {
-        messageSuccess('Contato cadastrado com sucesso!')
-        history.push('/contacts')
-        setIsVisible(false)
-      })
-      .catch((error) => {
-        messageError(error.response.data)
-      })
+    if (idContact !== '') {
+      contact.id = idContact
+
+      await service_contact
+        .updateContact(contact)
+        .then((response) => {
+          messageSuccess('Contato atualizado com sucesso')
+          history.push('/contacts')
+          setIsVisible(false)
+          setIdContact('')
+        })
+        .catch((error) => {
+          messageError(error.response.data)
+        })
+    } else {
+      await service_contact
+        .saveContact(contact)
+        .then((response) => {
+          messageSuccess('Contato cadastrado com sucesso!')
+          history.push('/contacts')
+          setIsVisible(false)
+        })
+        .catch((error) => {
+          console.log(error)
+          messageError(error)
+        })
+    }
+  }
+
+  async function updateContactFunction() {
+    const contact = await service_contact.getById(idContact)
+    const CONTACT_FIELDS = ['first_name', 'last_name', 'phone_number', 'email']
+    CONTACT_FIELDS.forEach((fieldName) => {
+      setValue(fieldName, contact[fieldName])
+    })
   }
 
   function handleOnChange() {
