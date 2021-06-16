@@ -18,14 +18,23 @@
 
 .customInput {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
   width: 100%;
   margin: 0px;
 }
 
 .customInput + div {
   margin-top: 8px;
+}
+
+.customInput p {
+  margin-left: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: var(--invalid);
+  font-size: 0.625rem;
 }
 
 .customInput input {
@@ -37,7 +46,7 @@
   fill-opacity: 0;
   flex: 1;
   text-indent: 3px;
-  padding: 2px;
+  padding: 2px 8px;
   font-style: normal;
   font-weight: normal;
   font-size: 1rem;

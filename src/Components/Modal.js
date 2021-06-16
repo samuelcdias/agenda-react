@@ -24,7 +24,7 @@ export default class Modal extends Component {
       >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
-            <div className="modal-header">
+            <div className="modal-header justify-content-center">
               <h5 className="modal-title">{this.props.title}</h5>
             </div>
             <div className="modal-body">
