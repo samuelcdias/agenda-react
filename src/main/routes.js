@@ -15,7 +15,7 @@ function Routes() {
           <Route exact path="/contacts" component={Contacts} />
           <Route path="/contacts/register" component={RegisterContacts} />
           <Route path="/about" component={About} />
-          <Route path="/Home" component={Home} />
+          <Route path="/home" component={Home} />
         </Provider>
       </Switch>
     </HashRouter>
